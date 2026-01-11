@@ -1,15 +1,17 @@
-import { products } from "../data/products";
-
 export default function Products() {
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Products</h2>
-      {products.map(product => (
-        <div key={product.id} style={{ margin: "10px 0" }}>
-          <h4>{product.name}</h4>
-          <p>₹{product.price}</p>
-        </div>
-      ))}
-    </div>
+    <section className="px-8 py-16">
+      <h2 className="text-2xl font-medium mb-10">Shop All</h2>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
+        {[1,2,3,4].map(i => (
+          <div key={i} className="text-sm">
+            <div className="w-full h-64 bg-gray-200 mb-3"></div>
+            <p className="font-medium">Product Name</p>
+            <p className="text-gray-500 mt-1">₹1999</p>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }

@@ -5,38 +5,56 @@ export default function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="relative w-full border-b px-6 py-5">
-      <div className="flex items-center justify-between">
-        
-        {/* Menu */}
+    <>
+      {/* HEADER BAR */}
+      <header className="flex items-center px-6 py-4 border-b">
         <button
-          onClick={() => setOpen(!open)}
-          className="text-xs uppercase tracking-widest"
+          onClick={() => setOpen(true)}
+          className="text-sm font-medium"
         >
-          Menu
+         ☰
         </button>
 
-        {/* Brand */}
-        <h1 className="text-sm font-semibold tracking-widest">
-          9•5 EDIT
+        <h1 className="mx-auto text-lg font-semibold">
+          9•5 EDIT 
         </h1>
+      </header>
 
-        {/* Spacer */}
-        <div className="w-10"></div>
-      </div>
-
-      {/* Dropdown */}
-      {open && (
-        <div className="absolute top-14 left-6 bg-white border p-4 space-y-3 z-10">
-          <Link to="/" className="block text-sm hover:opacity-60">Home</Link>
-          <Link to="/products" className="block text-sm hover:opacity-60">Products</Link>
-          <Link to="/about" className="block text-sm hover:opacity-60">About</Link>
-          <Link to="/contact" className="block text-sm hover:opacity-60">Contact</Link>
+      {/* LEFT SLIDE MENU */}
+      <div
+        className={`
+          fixed top-0 left-0 h-full w-64 bg-white border-r
+          transform transition-transform duration-300 ease-in-out
+          ${open ? "translate-x-0" : "-translate-x-full"}
+          z-50
+        `}
+      >
+        {/* CLOSE */}
+        <div className="p-4">
+          <button
+            onClick={() => setOpen(false)}
+            className="text-sm"
+          >
+        ✕
+          </button>
         </div>
-      )}
-    </header>
+
+        {/* LINKS */}
+        <nav className="flex flex-col gap-4 p-6">
+          <Link to="/" onClick={() => setOpen(false)}>
+            Home
+          </Link>
+          <Link to="/products" onClick={() => setOpen(false)}>
+            Products
+          </Link>
+          <Link to="/about" onClick={() => setOpen(false)}>
+            About
+          </Link>
+          <Link to="/contact" onClick={() => setOpen(false)}>
+            Contact
+          </Link>
+        </nav>
+      </div>
+    </>
   );
 }
-<header className="w-full border-b border-black px-8 py-6">
-  Header
-</header>

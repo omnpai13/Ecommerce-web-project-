@@ -3,6 +3,7 @@ import Layout from "./components/Layout";
 
 import Home from "./pages/Home";
 import Products from "./pages/Products";
+import Productdetails from "./pages/Productdetails"; // <-- added
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 
@@ -13,6 +14,7 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<Productdetails />} /> {/* <-- dynamic route */}
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
         </Route>

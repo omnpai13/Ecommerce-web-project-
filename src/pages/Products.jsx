@@ -10,7 +10,7 @@ export default function Products() {
         {products.map(product => (
           <Link
             key={product.id}
-            to={`/products/${product.id}`}
+            to={`/product/${product.id}`}   // ✅ FIXED
             className="text-sm"
           >
             <div className="w-full h-64 bg-gray-200 mb-3"></div>

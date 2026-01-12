@@ -8,16 +8,30 @@ export default function Header() {
     <>
       {/* HEADER BAR */}
       <header className="flex items-center px-6 py-4 border-b">
+        
+        {/* MENU BUTTON */}
         <button
           onClick={() => setOpen(true)}
           className="text-sm font-medium"
         >
-         ☰
+          ☰
         </button>
 
-        <h1 className="mx-auto text-lg font-semibold">
-          9•5 EDIT 
-        </h1>
+        <Link to="/" className="mx-auto text-lg font-semibold">
+  9•5 EDIT
+</Link>
+
+
+        {/* ICONS (ADDED) */}
+        <div className="flex items-center gap-4">
+          <Link to="/favourites" className="text-lg">
+            ♡
+          </Link>
+          <Link to="/cart" className="text-lg">
+            🛒
+          </Link>
+        </div>
+
       </header>
 
       {/* LEFT SLIDE MENU */}
@@ -35,7 +49,7 @@ export default function Header() {
             onClick={() => setOpen(false)}
             className="text-sm"
           >
-        ✕
+            ✕
           </button>
         </div>
 

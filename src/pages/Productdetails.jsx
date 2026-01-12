@@ -1,130 +1,148 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import products from "../data/products"; // make sure each product has id, name, price, description, images: []
+import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
-const sizes = ["XXS", "XS", "S", "M", "L", "XL", "XXL"];
-
-const Productdetails = () => {
+export default function Productdetails() {
   const { id } = useParams();
-  const product = products.find(p => p.id === id);
+  const navigate = useNavigate();
 
-  const [selectedSize, setSelectedSize] = useState("XS");
-  const [quantity, setQuantity] = useState(1);
-  const [mainImageIndex, setMainImageIndex] = useState(0);
-
-  if (!product) {
-    return <p className="p-8 text-center">Product not found</p>;
+  // SAFETY GUARD
+  if (!id) {
+    return <div className="pt-24 text-center">Product not found</div>;
   }
 
-  const handleAddToCart = () => {
-    console.log("Add to Cart clicked", {
-      productId: product.id,
-      selectedSize,
-      quantity,
-    });
+  const productId = String(id);
+
+  const [activeImage, setActiveImage] = useState(0);
+  const [size, setSize] = useState("M");
+  const [qty, setQty] = useState(1);
+  const [inCart, setInCart] = useState(false);
+  const [inFav, setInFav] = useState(false);
+
+  const product = {
+    id: productId,
+    name: "Essential White Shirt",
+    images: [
+      "https://via.placeholder.com/600x800?text=Product+1",
+      "https://via.placeholder.com/600x800?text=Product+2",
+    ],
+    size,
+    qty,
   };
 
-  const handleBuyNow = () => {
-    console.log("Buy Now clicked", {
-      productId: product.id,
-      selectedSize,
-      quantity,
-    });
+  useEffect(() => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const fav = JSON.parse(localStorage.getItem("favourites")) || [];
+
+    setInCart(cart.some(item => String(item.id) === productId));
+    setInFav(fav.some(item => String(item.id) === productId));
+  }, [productId]);
+
+  const toggleCart = () => {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    if (cart.some(item => String(item.id) === productId)) {
+      cart = cart.filter(item => String(item.id) !== productId);
+      setInCart(false);
+    } else {
+      cart.push(product);
+      setInCart(true);
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+  };
+
+  const toggleFav = () => {
+    let fav = JSON.parse(localStorage.getItem("favourites")) || [];
+
+    if (fav.some(item => String(item.id) === productId)) {
+      fav = fav.filter(item => String(item.id) !== productId);
+      setInFav(false);
+    } else {
+      fav.push(product);
+      setInFav(true);
+    }
+
+    localStorage.setItem("favourites", JSON.stringify(fav));
+  };
+
+  const buyNow = () => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.push(product);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    navigate("/checkout");
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-10 p-8">
-      {/* Images Section */}
-      <div className="flex flex-col md:w-1/2 gap-4">
-        <img
-          src={product.images[mainImageIndex]}
-          alt={product.name}
-          className="w-full h-[400px] object-cover rounded"
-        />
-        <div className="flex gap-2">
-          {product.images.map((img, index) => (
-            <img
-              key={index}
-              src={img}
-              alt={`${product.name}-${index}`}
-              className={`w-20 h-20 object-cover rounded cursor-pointer border ${
-                mainImageIndex === index ? "border-black" : "border-gray-300"
+    <section className="max-w-6xl mx-auto px-8 pt-24 pb-32 grid md:grid-cols-2 gap-16">
+      {/* IMAGES */}
+      <div>
+        <div className="h-[520px] mb-6">
+          <img
+            src={product.images[activeImage]}
+            alt={product.name}
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        <div className="flex gap-4">
+          {product.images.map((img, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveImage(i)}
+              className={`w-24 h-24 border ${
+                activeImage === i ? "border-black" : "border-gray-300"
               }`}
-              onClick={() => setMainImageIndex(index)}
-            />
+            >
+              <img src={img} className="w-full h-full object-cover" />
+            </button>
           ))}
         </div>
       </div>
 
-      {/* Product Info Section */}
-      <div className="md:w-1/2 flex flex-col gap-4">
-        <h1 className="text-3xl font-semibold">{product.name}</h1>
-        <p className="text-xl text-gray-700">Rs. {product.price}</p>
-        <p className="text-gray-500 text-sm">Tax included. Shipping calculated at checkout.</p>
-        <p className="text-gray-500 text-sm">{product.description}</p>
+      {/* DETAILS */}
+      <div>
+        <h1 className="text-3xl mb-6">{product.name}</h1>
 
-        {/* Sizes */}
-        <div className="mt-4">
-          <p className="font-medium mb-2">Size</p>
-          <div className="flex gap-2 flex-wrap">
-            {sizes.map(size => (
+        <div className="mb-6">
+          <p className="mb-2">Size</p>
+          <div className="flex gap-3">
+            {["S", "M", "L", "XL"].map(s => (
               <button
-                key={size}
-                onClick={() => setSelectedSize(size)}
-                className={`px-3 py-1 border rounded ${
-                  selectedSize === size ? "bg-black text-white" : "bg-white text-black border-gray-300"
+                key={s}
+                onClick={() => setSize(s)}
+                className={`border px-4 py-2 ${
+                  size === s ? "border-black" : "border-gray-300"
                 }`}
               >
-                {size}
+                {s}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Quantity */}
-        <div className="mt-4">
-          <p className="font-medium mb-2">Quantity</p>
-          <div className="flex items-center gap-2 border w-fit rounded px-2">
-            <button
-              onClick={() => setQuantity(prev => Math.max(prev - 1, 1))}
-              className="px-2 py-1"
-            >
-              −
-            </button>
-            <span>{quantity}</span>
-            <button
-              onClick={() => setQuantity(prev => prev + 1)}
-              className="px-2 py-1"
-            >
-              +
-            </button>
+        <div className="mb-8">
+          <p className="mb-2">Quantity</p>
+          <div className="flex gap-4 items-center">
+            <button onClick={() => setQty(Math.max(1, qty - 1))}>−</button>
+            <span>{qty}</span>
+            <button onClick={() => setQty(qty + 1)}>+</button>
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="mt-6 flex flex-col gap-3">
-          <button
-            onClick={handleAddToCart}
-            className="px-6 py-3 border border-black rounded font-medium"
-          >
-            Add to Cart
+        <div className="flex flex-col gap-4 max-w-sm">
+          <button onClick={toggleCart} className="border py-3">
+            {inCart ? "Remove from Cart" : "Add to Cart"}
           </button>
-          <button
-            onClick={handleBuyNow}
-            className="px-6 py-3 bg-green-300 rounded font-medium"
-          >
-            Buy it now
+
+          <button onClick={buyNow} className="bg-black text-white py-3">
+            Buy Now
           </button>
-          <button
-            onClick={() => console.log("Add to Wishlist clicked", product.id)}
-            className="px-6 py-3 border border-black rounded font-medium flex items-center justify-center gap-2"
-          >
-            ♥ Add to Wishlist
+
+          <button onClick={toggleFav}>
+            {inFav ? "❤️ Remove Favourite" : "♡ Add to Favourite"}
           </button>
         </div>
       </div>
-    </div>
+    </section>
   );
-};
-
-export default Productdetails;
+}

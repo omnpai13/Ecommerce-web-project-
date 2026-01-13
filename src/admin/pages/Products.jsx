@@ -1,10 +1,10 @@
-export default function AdminProducts() {
+const Products = () => {
   return (
-    <div className="p-12">
-      <h1 className="text-2xl font-medium mb-6">Products</h1>
-      <p className="text-gray-500">
-        Product management UI will go here
-      </p>
+    <div>
+      <h1 className="text-2xl font-semibold mb-4">Products</h1>
+      <p>List of all products will appear here.</p>
     </div>
   );
-}
+};
+
+export default Products;

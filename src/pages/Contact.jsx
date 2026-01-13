@@ -21,6 +21,19 @@ export default function Contact() {
           @9to5_edit
         </a>
       </div>
+      <div className="mb-12">
+        <p className="text-sm text-gray-600 mb-2">
+          Email
+        </p>
+        <a
+          href="https://instagram.com/9to5_edit"
+          target="_blank"
+          rel="noreferrer"
+          className="text-base underline hover:opacity-70 transition"
+        >
+          @9to5_edit
+        </a>
+      </div>
 
       {/* Review Block */}
       <div className="max-w-xl">

@@ -1,60 +1,47 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation
+} from "react-router-dom";
 
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 
+/* CUSTOMER PAGES */
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import Productdetails from "./pages/Productdetails";
-<<<<<<< HEAD
-=======
 import Cart from "./pages/Cart";
 import Favourites from "./pages/Favourites";
 import Checkout from "./pages/Checkout";
->>>>>>> 13666389d4ec793f1bada16b3cd1dc329f062095
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+
+/* ADMIN */
 import AdminLogin from "./admin/pages/AdminLogin";
 import Dashboard from "./admin/pages/Dashboard";
 import AdminProducts from "./admin/pages/Products";
+import AddProduct from "./admin/pages/AddProduct";
+import Orders from "./admin/pages/Orders";
+import Reviews from "./admin/pages/Reviews";
+import HomeControl from "./admin/pages/HomeControl";
+
+import AdminLayout from "./admin/components/AdminLayout";
 import ProtectedAdminRoute from "./admin/routes/ProtectedAdminRoute";
 
-function App() {
+/* ---------- LAYOUT ---------- */
+function AppLayout() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
   return (
-    <BrowserRouter>
-      
-      {/* HEADER ALWAYS VISIBLE */}
-      <Header />
+    <>
+      {/* WEBSITE HEADER ONLY */}
+      {!isAdminRoute && <Header />}
 
       <Routes>
-<<<<<<< HEAD
-        <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/products/:id" element={<Productdetails />} /> {/* <-- dynamic route */}
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-        </Route>
-        <Route path="/admin/login" element={<AdminLogin />} />
-
-        <Route
-          path="/admin/dashboard"
-          element={
-            <ProtectedAdminRoute>
-              <Dashboard />
-            </ProtectedAdminRoute>
-          }
-        />
-
-        <Route
-          path="/admin/products"
-          element={
-            <ProtectedAdminRoute>
-              <AdminProducts />
-            </ProtectedAdminRoute>
-          }
-        />
-
-=======
+        {/* ---------------- CUSTOMER ROUTES ---------------- */}
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/product/:id" element={<Productdetails />} />
@@ -63,11 +50,39 @@ function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
->>>>>>> 13666389d4ec793f1bada16b3cd1dc329f062095
+
+        {/* ---------------- ADMIN LOGIN ---------------- */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+
+        {/* ---------------- ADMIN PANEL ---------------- */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedAdminRoute>
+              <AdminLayout />
+            </ProtectedAdminRoute>
+          }
+        >
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="products" element={<AdminProducts />} />
+          <Route path="add-product" element={<AddProduct />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="reviews" element={<Reviews />} />
+          <Route path="home-control" element={<HomeControl />} />
+        </Route>
       </Routes>
 
-    </BrowserRouter>
+      {/* WEBSITE FOOTER ONLY */}
+      {!isAdminRoute && <Footer />}
+    </>
   );
 }
 
-export default App;
+/* ---------- ROOT ---------- */
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppLayout />
+    </BrowserRouter>
+  );
+}

@@ -11,11 +11,13 @@ const AdminLogin = () => {
 
     // TEMP LOGIN (replace with backend later)
     if (username === "admin" && password === "admin123") {
+      localStorage.setItem("adminToken", "true");
       navigate("/admin/dashboard");
     } else {
       alert("Invalid admin credentials");
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

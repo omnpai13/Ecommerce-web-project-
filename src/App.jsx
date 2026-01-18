@@ -33,7 +33,9 @@ import ProtectedAdminRoute from "./admin/routes/ProtectedAdminRoute";
 /* ---------- LAYOUT ---------- */
 function AppLayout() {
   const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith("/admin");
+  const isAdminRoute =
+  location.pathname.startsWith("/admin") &&
+  location.pathname !== "/admin/login";
 
   return (
     <>

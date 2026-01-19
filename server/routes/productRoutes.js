@@ -3,21 +3,21 @@ import {
   getProducts,
   getProductById,
   createProduct,
+  updateProduct,
   deleteProduct,
 } from "../controllers/productController.js";
+
 import adminProtect from "../middleware/adminAuthMiddleware.js";
-import {updateProduct} from "../controllers/productController.js"
 
 const router = express.Router();
 
-// PUBLIC ROUTES
+// PUBLIC
 router.get("/", getProducts);
 router.get("/:id", getProductById);
 
-// ADMIN ROUTES
+// ADMIN
 router.post("/", adminProtect, createProduct);
-router.delete("/:id", adminProtect, deleteProduct);
-
 router.put("/:id", adminProtect, updateProduct);
+router.delete("/:id", adminProtect, deleteProduct);
 
 export default router;

@@ -8,7 +8,7 @@ export const getProducts = async (req, res) => {
   res.json(products);
 };
 
-// @desc   Get single product
+// @desc   Get product by ID
 // @route  GET /api/products/:id
 // @access Public
 export const getProductById = async (req, res) => {
@@ -25,30 +25,32 @@ export const getProductById = async (req, res) => {
 // @route  POST /api/products
 // @access Admin
 export const createProduct = async (req, res) => {
+  const {
+    name,
+    price,
+    description,
+    category,
+    countInStock,
+    image,
+  } = req.body;
+
+  if (!name || !price || !description || !category) {
+    return res
+      .status(400)
+      .json({ message: "Please provide all required fields" });
+  }
+
   const product = new Product({
-    name: "Sample Product",
-    price: 0,
-    description: "Sample description",
-    category: "Sample category",
-    countInStock: 0,
+    name,
+    price,
+    description,
+    category,
+    countInStock,
+    image,
   });
 
   const createdProduct = await product.save();
   res.status(201).json(createdProduct);
-};
-
-// @desc   Delete product
-// @route  DELETE /api/products/:id
-// @access Admin
-export const deleteProduct = async (req, res) => {
-  const product = await Product.findById(req.params.id);
-
-  if (product) {
-    await product.deleteOne();
-    res.json({ message: "Product removed" });
-  } else {
-    res.status(404).json({ message: "Product not found" });
-  }
 };
 
 // @desc   Update product
@@ -76,6 +78,20 @@ export const updateProduct = async (req, res) => {
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);
+  } else {
+    res.status(404).json({ message: "Product not found" });
+  }
+};
+
+// @desc   Delete product
+// @route  DELETE /api/products/:id
+// @access Admin
+export const deleteProduct = async (req, res) => {
+  const product = await Product.findById(req.params.id);
+
+  if (product) {
+    await product.deleteOne();
+    res.json({ message: "Product removed" });
   } else {
     res.status(404).json({ message: "Product not found" });
   }

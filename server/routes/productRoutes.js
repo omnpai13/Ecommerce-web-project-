@@ -6,6 +6,7 @@ import {
   deleteProduct,
 } from "../controllers/productController.js";
 import adminProtect from "../middleware/adminAuthMiddleware.js";
+import {updateProduct} from "../controllers/productController.js"
 
 const router = express.Router();
 
@@ -16,5 +17,7 @@ router.get("/:id", getProductById);
 // ADMIN ROUTES
 router.post("/", adminProtect, createProduct);
 router.delete("/:id", adminProtect, deleteProduct);
+
+router.put("/:id", adminProtect, updateProduct);
 
 export default router;

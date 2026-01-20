@@ -8,6 +8,9 @@ import {
 } from "../controllers/productController.js";
 
 import adminProtect from "../middleware/adminAuthMiddleware.js";
+import { createProductReview } from "../controllers/productController.js";
+import protect from "../middleware/userAuthMiddleware.js";
+
 
 const router = express.Router();
 
@@ -19,5 +22,8 @@ router.get("/:id", getProductById);
 router.post("/", adminProtect, createProduct);
 router.put("/:id", adminProtect, updateProduct);
 router.delete("/:id", adminProtect, deleteProduct);
+
+//REVIEW
+router.post("/:id/reviews", protect, createProductReview);
 
 export default router;

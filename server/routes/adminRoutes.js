@@ -7,7 +7,7 @@ const router = express.Router();
 // PUBLIC ROUTE
 router.post("/login", adminLogin);
 
-// 🔒 PROTECTED ROUTE
+// PROTECTED ROUTE
 router.get("/dashboard", adminProtect, (req, res) => {
   res.json({
     message: "Welcome Admin",

@@ -4,11 +4,53 @@ import Product from "../models/Product.js";
 // @route  GET /api/products
 // @access Public
 export const getProducts = async (req, res) => {
-  const products = await Product.find({});
-  res.json(products);
+  try {
+    const pageSize = 8;
+    const page = Number(req.query.pageNumber) || 1;
+
+    // Search
+    const keyword = req.query.keyword
+      ? {
+          name: {
+            $regex: req.query.keyword,
+            $options: "i",
+          },
+        }
+      : {};
+
+    // Category filter
+    const category = req.query.category
+      ? { category: req.query.category }
+      : {};
+
+    // Sorting
+    let sortOption = { createdAt: -1 }; // default: newest
+    if (req.query.sort === "price") sortOption = { price: 1 };
+    if (req.query.sort === "-price") sortOption = { price: -1 };
+    if (req.query.sort === "rating") sortOption = { rating: -1 };
+
+    const filter = { ...keyword, ...category };
+
+    const count = await Product.countDocuments(filter);
+
+    const products = await Product.find(filter)
+      .sort(sortOption)
+      .limit(pageSize)
+      .skip(pageSize * (page - 1));
+
+    res.json({
+      products,
+      page,
+      pages: Math.ceil(count / pageSize),
+      totalProducts: count,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-// @desc   Get product by ID
+
+// @desc   Get single product
 // @route  GET /api/products/:id
 // @access Public
 export const getProductById = async (req, res) => {
@@ -25,32 +67,30 @@ export const getProductById = async (req, res) => {
 // @route  POST /api/products
 // @access Admin
 export const createProduct = async (req, res) => {
-  const {
-    name,
-    price,
-    description,
-    category,
-    countInStock,
-    image,
-  } = req.body;
-
-  if (!name || !price || !description || !category) {
-    return res
-      .status(400)
-      .json({ message: "Please provide all required fields" });
-  }
-
   const product = new Product({
-    name,
-    price,
-    description,
-    category,
-    countInStock,
-    image,
+    name: "Sample Product",
+    price: 0,
+    description: "Sample description",
+    category: "Sample category",
+    countInStock: 0,
   });
 
   const createdProduct = await product.save();
   res.status(201).json(createdProduct);
+};
+
+// @desc   Delete product
+// @route  DELETE /api/products/:id
+// @access Admin
+export const deleteProduct = async (req, res) => {
+  const product = await Product.findById(req.params.id);
+
+  if (product) {
+    await product.deleteOne();
+    res.json({ message: "Product removed" });
+  } else {
+    res.status(404).json({ message: "Product not found" });
+  }
 };
 
 // @desc   Update product
@@ -78,20 +118,6 @@ export const updateProduct = async (req, res) => {
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);
-  } else {
-    res.status(404).json({ message: "Product not found" });
-  }
-};
-
-// @desc   Delete product
-// @route  DELETE /api/products/:id
-// @access Admin
-export const deleteProduct = async (req, res) => {
-  const product = await Product.findById(req.params.id);
-
-  if (product) {
-    await product.deleteOne();
-    res.json({ message: "Product removed" });
   } else {
     res.status(404).json({ message: "Product not found" });
   }

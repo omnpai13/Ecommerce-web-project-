@@ -38,6 +38,24 @@ const orderSchema = mongoose.Schema(
       type: String,
       default: "Pending",
     },
+
+    // ---- THESE MUST BE INSIDE THE SCHEMA ----
+
+    isPaid: {
+      type: Boolean,
+      default: false,
+    },
+
+    paidAt: {
+      type: Date,
+    },
+
+    paymentResult: {
+      paymentId: String,
+      orderId: String,
+      signature: String,
+    },
+
   },
   {
     timestamps: true,

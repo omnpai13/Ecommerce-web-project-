@@ -5,7 +5,7 @@ export default function Home() {
   const [homeData, setHomeData] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/home")
+    fetch("http://localhost:5003/api/home")
       .then((res) => res.json())
       .then((data) => setHomeData(data))
       .catch((err) => console.error(err));

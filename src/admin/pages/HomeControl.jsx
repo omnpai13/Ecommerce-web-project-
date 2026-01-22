@@ -18,12 +18,11 @@ const HomeControl = () => {
     formData.append("image", file);
 
     const res = await axios.post(
-      "http://localhost:5000/api/upload",
+      "http://localhost:5003/api/upload",
       formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
         },
       }
     );
@@ -41,6 +40,11 @@ const HomeControl = () => {
   // ===== Save Home Page =====
   const saveHomePage = async () => {
     try {
+      if (!token) {
+        alert("Admin not authenticated. Please login again.");
+        return;
+      }
+
       const heroUrl = heroImage ? await uploadImage(heroImage) : "";
 
       const editsData = await Promise.all(
@@ -51,7 +55,7 @@ const HomeControl = () => {
       );
 
       await axios.put(
-        "http://localhost:5000/api/home",
+        "http://localhost:5003/api/home",
         {
           heroImage: heroUrl,
           edits: editsData,
@@ -62,10 +66,10 @@ const HomeControl = () => {
           },
         }
       );
-
       alert("Home page updated successfully");
-    } catch (error) {
-      console.error(error);
+    } 
+    catch (error) {
+      console.error("UPLOAD ERROR:", error.response?.data || error.message);
       alert("Error updating home page");
     }
   };

@@ -4,7 +4,6 @@ dotenv.config();
 
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 
 // Routes
@@ -13,9 +12,6 @@ import adminRoutes from "./routes/adminRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import homeRoutes from "./routes/homeRoutes.js";
-
-// Load env variables
-dotenv.config();
 
 // Connect DB
 connectDB();

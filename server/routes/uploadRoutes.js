@@ -7,17 +7,30 @@ const router = express.Router();
 // @desc   Upload image
 // @route  POST /api/upload
 // @access Admin
-router.post("/", adminProtect, upload.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({
-      message:
-        "No file received. Body must be Form‑Data with key 'image' and type File.",
-    });
+router.post(
+  "/",
+  adminProtect,
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          message: "No file received. Use form-data with key 'image'",
+        });
+      }
+
+      res.status(200).json({
+        imageUrl: req.file.path,
+      });
+    } catch (error) {
+      console.error("UPLOAD ERROR:", error);
+      res.status(500).json({
+        message: "Image upload failed",
+        error: error.message,
+      });
+    }
   }
+);
 
-  res.status(200).json({
-    imageUrl: req.file.path,
-  });
-});
 
-export default router;   // ✅ THIS LINE WAS MISSING
+export default router;   

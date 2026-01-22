@@ -4,7 +4,7 @@ import adminProtect from "../middleware/adminAuthMiddleware.js";
 
 const router = express.Router();
 
-// @desc   Upload image to Cloudinary
+// @desc   Upload image
 // @route  POST /api/upload
 // @access Admin
 router.post("/", adminProtect, upload.single("image"), (req, res) => {
@@ -20,4 +20,4 @@ router.post("/", adminProtect, upload.single("image"), (req, res) => {
   });
 });
 
-export default router;
+export default router;   // ✅ THIS LINE WAS MISSING

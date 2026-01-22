@@ -1,17 +1,28 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [homeData, setHomeData] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/home")
+      .then((res) => res.json())
+      .then((data) => setHomeData(data))
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
     <>
       {/* ===== HERO SECTION ===== */}
       <section className="relative h-screen overflow-hidden">
-        
         {/* Background Image */}
-        <img
-          src="" // add your hero image later
-          alt="Hero"
-          className="w-full h-full object-cover object-center"
-        />
+        {homeData?.heroImage && (
+          <img
+            src={homeData.heroImage}
+            alt="Hero"
+            className="w-full h-full object-cover object-center"
+          />
+        )}
 
         {/* Dark Overlay */}
         <div className="absolute inset-0 bg-black/30"></div>
@@ -41,55 +52,23 @@ export default function Home() {
 
       {/* ===== SHOP OUR EDITS SECTION ===== */}
       <section className="px-12 py-24 bg-white">
-        
-        {/* Section Heading */}
         <h2 className="text-2xl font-medium tracking-wide mb-12">
           Shop Our Edits
         </h2>
 
-        {/* Product Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          
-          {/* Product Card 1 */}
-          <div className="cursor-pointer">
-            <div className="w-full h-[420px] bg-gray-100 mb-4 overflow-hidden">
-              {/* Replace src with product image */}
-              <img
-                src=""
-                alt="Product 1"
-                className="w-full h-full object-cover"
-              />
+          {homeData?.edits?.map((item, index) => (
+            <div key={index} className="cursor-pointer">
+              <div className="w-full h-[420px] bg-gray-100 mb-4 overflow-hidden">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="text-sm font-medium">{item.title}</p>
             </div>
-            <p className="text-sm font-medium">Essential White Shirt</p>
-            
-          </div>
-
-          {/* Product Card 2 */}
-          <div className="cursor-pointer">
-            <div className="w-full h-[420px] bg-gray-100 mb-4 overflow-hidden">
-              <img
-                src=""
-                alt="Product 2"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <p className="text-sm font-medium">Relaxed Cotton Tee</p>
-            
-          </div>
-
-          {/* Product Card 3 */}
-          <div className="cursor-pointer">
-            <div className="w-full h-[420px] bg-gray-100 mb-4 overflow-hidden">
-              <img
-                src=""
-                alt="Product 3"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <p className="text-sm font-medium">Oversized Work Shirt</p>
-        
-          </div>
-
+          ))}
         </div>
       </section>
     </>

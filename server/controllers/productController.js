@@ -167,3 +167,19 @@ export const createProductReview = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+//to create sample products by admin
+export const createSampleProduct = async (req, res) => {
+  const product = new Product({
+    name: "Sample Product",
+    price: 0,
+    description: "Sample description",
+    image: "/images/sample.jpg",
+    category: "Sample Category",
+    countInStock: 0,
+  });
+
+  const createdProduct = await product.save();
+  res.status(201).json(createdProduct);
+};

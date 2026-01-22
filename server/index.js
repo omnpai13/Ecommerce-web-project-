@@ -1,7 +1,9 @@
+import dotenv from "dotenv";
+// LOAD ENV FIRST
+dotenv.config();
+
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-
 import connectDB from "./config/db.js";
 
 // ROUTES
@@ -10,8 +12,7 @@ import adminRoutes from "./routes/adminRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 
-// LOAD ENV FIRST
-dotenv.config();
+
 
 // CONNECT DB
 connectDB();

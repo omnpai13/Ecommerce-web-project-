@@ -6,18 +6,23 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetch("http://localhost:5003/api/admin/stats")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Backend not reachable");
+        return res.json();
+      })
       .then((data) => {
         setStats(data);
         setLoading(false);
       })
       .catch((err) => {
         console.error(err);
+        setStats(null);
         setLoading(false);
       });
   }, []);
 
   if (loading) return <p>Loading dashboard...</p>;
+  if (!stats) return <p>Backend not reachable</p>;
 
   return (
     <div>

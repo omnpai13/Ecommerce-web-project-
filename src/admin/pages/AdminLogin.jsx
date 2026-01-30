@@ -1,65 +1,63 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const submitHandler = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
     setError("");
 
-    try {
-      const res = await axios.post(
-        "http://localhost:5003/api/auth/login",
-        {
-          email,
-          password,
-        }
+    // DEV MODE ADMIN LOGIN (LOGIC ONLY)
+    if (username === "admin@dev.com" && password === "admin123") {
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ username, isAdmin: true })
       );
-
-      console.log("LOGIN RESPONSE:", res.data);
-
-      // save token
-      localStorage.setItem("token", res.data.token);
-
-      // redirect
+      localStorage.setItem("token", "dev-token");
       navigate("/admin/dashboard");
-    } catch (err) {
-      console.error("LOGIN ERROR:", err.response?.data || err.message);
-      setError("Login failed. Check email/password.");
+    } else {
+      setError("Invalid admin credentials");
     }
   };
 
   return (
-    <div style={{ padding: "100px", maxWidth: "400px", margin: "auto" }}>
-      <h2>Admin Login</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <form
+        onSubmit={handleLogin}
+        className="bg-white p-8 shadow rounded w-96"
+      >
+        <h2 className="text-2xl font-semibold mb-6 text-center">
+          Admin Login
+        </h2>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="text-red-500 mb-3">{error}</p>}
 
-      <form onSubmit={submitHandler}>
         <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
+          type="text"
+          placeholder="Username"
+          className="w-full border p-2 mb-4"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
-        <br /><br />
 
         <input
           type="password"
           placeholder="Password"
+          className="w-full border p-2 mb-4"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
         />
-        <br /><br />
 
-        <button type="submit">Login</button>
+        <button
+          type="submit"
+          className="w-full bg-black text-white py-2"
+        >
+          Login
+        </button>
       </form>
     </div>
   );

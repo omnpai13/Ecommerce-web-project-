@@ -1,33 +1,34 @@
 import express from "express";
-import {
-  getProducts,
-  getProductById,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-} from "../controllers/productController.js";
-
-import adminProtect from "../middleware/adminAuthMiddleware.js";
-import { createProductReview } from "../controllers/productController.js";
-import protect from "../middleware/userAuthMiddleware.js";
-import { createSampleProduct } from "../controllers/productController.js";
-
+import Product from "../models/Product.js";
 
 const router = express.Router();
 
-// PUBLIC
-router.get("/", getProducts);
-router.get("/:id", getProductById);
+// GET all products (admin + website)
+router.get("/", async (req, res) => {
+  const products = await Product.find();
+  res.json(products);
+});
 
-// ADMIN
-router.post("/", adminProtect, createProduct);
-router.put("/:id", adminProtect, updateProduct);
-router.delete("/:id", adminProtect, deleteProduct);
+// CREATE product (admin)
+router.post("/", async (req, res) => {
+  const product = await Product.create(req.body);
+  res.status(201).json(product);
+});
 
-//REVIEW
-router.post("/:id/reviews", protect, createProductReview);
+// UPDATE product (admin)
+router.put("/:id", async (req, res) => {
+  const updated = await Product.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true }
+  );
+  res.json(updated);
+});
 
-//CREATE SAMPLE PRODUCTS
-router.post("/create", adminProtect, createSampleProduct);
+// DELETE product (admin)
+router.delete("/:id", async (req, res) => {
+  await Product.findByIdAndDelete(req.params.id);
+  res.json({ message: "Product deleted" });
+});
 
 export default router;

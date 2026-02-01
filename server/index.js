@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-// LOAD ENV FIRST
 dotenv.config();
 
 import express from "express";
@@ -14,16 +13,13 @@ import uploadRoutes from "./routes/uploadRoutes.js";
 import homeRoutes from "./routes/homeRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 
-// Connect DB
-connectDB();
-
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Test route
+// Health check (VERY IMPORTANT for hosting)
 app.get("/", (req, res) => {
   res.send("API is running");
 });
@@ -36,8 +32,11 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/home", homeRoutes);
 app.use("/api/orders", orderRoutes);
 
-// Start server
-const PORT = 5003;
+// Connect DB (non‑blocking, safe for Render)
+connectDB();
+
+// Start server (Render provides PORT)
+const PORT = process.env.PORT || 5003;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
